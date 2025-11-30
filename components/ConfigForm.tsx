@@ -23,9 +23,9 @@ const ConfigForm: React.FC<Props> = ({ config, onChange, onNext }) => {
         newConfig.totalMarks = '৭০';
         newConfig.questionCount = 10;
     } else {
-        newConfig.time = '৪০ মিনিট';
-        newConfig.totalMarks = '২০';
-        newConfig.questionCount = 20;
+        newConfig.time = '৩০ মিনিট';
+        newConfig.totalMarks = '৩০';
+        newConfig.questionCount = 30;
     }
     onChange(newConfig);
   };

@@ -13,9 +13,9 @@ const initialConfig: ExamConfig = {
   className: 'দশম',
   subject: '',
   year: '২০২৫',
-  time: '৪০ মিনিট',
-  totalMarks: '২০',
-  questionCount: 5,
+  time: '৩০ মিনিট',
+  totalMarks: '৩০',
+  questionCount: 30,
   questionType: QuestionType.MCQ,
 };
 
@@ -58,10 +58,12 @@ const App: React.FC = () => {
         {/* App Bar - Hidden on Print */}
         <header className="bg-white shadow-sm border-b border-emerald-100 print:hidden mb-8 sticky top-0 z-10">
             <div className="max-w-5xl mx-auto px-4 h-16 flex items-center gap-2">
-                <div className="bg-emerald-600 p-2 rounded-lg text-white">
+                <div className="bg-emerald-600 p-2 rounded-lg text-white shadow-lg shadow-emerald-200">
                     <BookOpen size={24} />
                 </div>
-                <h1 className="text-xl font-bold text-emerald-900">ExamGen Bangla</h1>
+                <h1 className="text-2xl font-bold font-hind bg-gradient-to-r from-emerald-800 via-teal-600 to-emerald-800 bg-clip-text text-transparent animate-pulse tracking-wide">
+                    এক্সামজেন বাংলা
+                </h1>
             </div>
         </header>
 
