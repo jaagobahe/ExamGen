@@ -1,0 +1,5 @@
+{
+  "name": "ExamGen Bangla",
+  "description": "Generate creative and MCQ exam questions in Bengali from PDF or text inputs, formatted for A4 printing.",
+  "requestFramePermissions": []
+}
