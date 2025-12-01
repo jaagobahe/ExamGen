@@ -42,7 +42,7 @@ const PrintLayout: React.FC<Props> = ({ config, questions, onBack, onReset }) =>
     }
 
     const opt = {
-      margin:       5, // Reduced margin to 5mm to prevent cutoff (CSS handles internal padding)
+      margin:       5, // Small 5mm margin
       filename:     `${config.examName}_${config.className}_${config.subject || 'Exam'}.pdf`,
       image:        { type: 'jpeg', quality: 0.98 },
       html2canvas:  { scale: 2, useCORS: true, logging: false }, 
@@ -138,25 +138,29 @@ const PrintLayout: React.FC<Props> = ({ config, questions, onBack, onReset }) =>
       {/* Paper Container */}
       <div 
         id="print-area" 
-        className={`bg-white shadow-2xl print:shadow-none p-10 text-black font-tiro relative box-border mx-auto leading-tight transition-all
-          ${isCreative ? 'w-[265mm] min-h-[210mm]' : 'w-[180mm] min-h-[297mm]'}`}
+        className={`bg-white shadow-2xl print:shadow-none text-black font-tiro relative box-border mx-auto leading-tight transition-all
+          ${isCreative ? 'w-[265mm] min-h-[210mm] p-10' : 'w-[180mm] h-auto'}
+          ${isMcq ? 'p-[1.0cm]' : 'p-10'}
+        `}
       >
+        {/* Force extra compact padding for MCQ to fit 30 items */}
+        {isMcq && <style>{`#print-area { padding: 0.6cm !important; }`}</style>}
         
         {/* Exam Header */}
-        <div className="text-center mb-6 border-b-2 border-black pb-2">
-          <h1 className="text-3xl font-bold mb-2">{config.schoolName}</h1>
-          <div className="flex justify-center items-center gap-2 text-xl font-semibold mb-1">
+        <div className={`text-center border-b-2 border-black ${isMcq ? 'mb-2 pb-1' : 'mb-6 pb-2'}`}>
+          <h1 className={`${isMcq ? 'text-lg' : 'text-3xl'} font-bold ${isMcq ? 'mb-0.5' : 'mb-2'}`}>{config.schoolName}</h1>
+          <div className={`flex justify-center items-center gap-2 font-semibold ${isMcq ? 'text-xs mb-0.5' : 'text-xl mb-1'}`}>
             <span>{config.examName}</span> <span>{config.year}</span>
           </div>
-          <div className="text-lg font-medium mb-1">
+          <div className={`font-medium ${isMcq ? 'text-xs mb-0.5' : 'text-lg mb-1'}`}>
              <span>শ্রেণী: {config.className}</span>
           </div>
           {config.subject && (
-            <div className="text-lg font-medium mb-2">
+            <div className={`font-medium ${isMcq ? 'text-xs mb-0.5' : 'text-lg mb-2'}`}>
                  <span>বিষয়: {config.subject}</span>
             </div>
           )}
-          <div className="flex justify-between items-center text-lg font-bold w-full mt-2 border-t border-black/20 pt-1">
+          <div className={`flex justify-between items-center font-bold w-full border-t border-black/20 ${isMcq ? 'text-xs mt-0.5 pt-0.5' : 'text-lg mt-2 pt-1'}`}>
              <span>সময়: {config.time}</span>
              <span>পূর্ণমান: {config.totalMarks}</span>
           </div>
@@ -168,21 +172,23 @@ const PrintLayout: React.FC<Props> = ({ config, questions, onBack, onReset }) =>
         </div>
 
         {/* Questions List */}
-        <div className={`${isMcq ? 'grid grid-cols-2 gap-x-8 gap-y-6 text-sm' : ''} ${isCreative ? 'columns-2 gap-8 space-y-0' : 'space-y-6'}`}>
+        <div className={`
+            ${isMcq ? 'columns-2 gap-x-4 gap-y-1 space-y-1 text-[10px]' : 'columns-2 gap-8 space-y-0 text-sm'}
+        `}>
           {questions.map((q, idx) => (
-            <div key={idx} className={`break-inside-avoid ${isCreative ? 'mb-6' : ''}`}>
+            <div key={idx} className={`break-inside-avoid ${isCreative ? 'mb-6' : 'mb-1'}`}>
               <div className="flex gap-1">
-                <span className="font-bold whitespace-nowrap w-6 text-lg">{toBanglaNum(idx + 1)}।</span>
+                <span className={`font-bold whitespace-nowrap ${isMcq ? 'w-4 text-[10px]' : 'w-6 text-lg'}`}>{toBanglaNum(idx + 1)}।</span>
                 
                 <div className="flex-1">
                     {/* Question Body */}
                     {isMcq ? (
                         <div>
-                            <p className="mb-1 font-medium leading-snug">{q.questionText}</p>
-                            <div className="grid grid-cols-2 gap-x-2 gap-y-1 ml-1 text-gray-800">
+                            <p className="mb-0.5 font-medium leading-tight">{q.questionText}</p>
+                            <div className="grid grid-cols-2 gap-x-1 gap-y-0 ml-1 text-gray-900">
                                 {q.options?.map((opt, optIdx) => (
-                                    <div key={optIdx} className="flex gap-1">
-                                        <span className="font-medium">({getLetter(optIdx)})</span>
+                                    <div key={optIdx} className="flex gap-1 items-baseline">
+                                        <span className="font-semibold text-[9px]">({getLetter(optIdx)})</span>
                                         <span>{cleanText(opt)}</span>
                                     </div>
                                 ))}
@@ -203,6 +209,7 @@ const PrintLayout: React.FC<Props> = ({ config, questions, onBack, onReset }) =>
                                 className="my-3 flex justify-center p-2 border border-dashed border-gray-300 print:border-black/10 rounded bg-white"
                                 title="Generated Diagram"
                                 dangerouslySetInnerHTML={{ __html: q.diagramSvg }}
+                                style={{ maxHeight: '150px' }}
                               />
                             )}
 
@@ -228,7 +235,7 @@ const PrintLayout: React.FC<Props> = ({ config, questions, onBack, onReset }) =>
         </div>
         
         {/* Footer */}
-        <div className="absolute bottom-4 left-0 w-full text-center text-[10px] text-gray-400 print:hidden">
+        <div className="absolute bottom-1 left-0 w-full text-center text-[7px] text-gray-300 print:hidden">
             Generated by ExamGen Bangla
         </div>
       </div>
