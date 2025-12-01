@@ -11,8 +11,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Tiro+Bangla:ital@0;1&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" referrerpolicy="no-referrer"></script>
     <script>
-      // Polyfill for process.env to prevent "process is not defined" crash on Vercel/Browser
+      // Polyfill for process.env to prevent "process is not defined" crash and inject API Key
       window.process = window.process || { env: {} };
+      // Injecting key as requested to fix deployment issue
+      window.process.env.API_KEY = "AIzaSyBsGImVKGIYUoPK1MEExsRSn6DUHP7ZqwQ";
       
       tailwind.config = {
         theme: {
