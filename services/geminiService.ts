@@ -1,7 +1,7 @@
 import { GoogleGenAI, Type, Schema } from "@google/genai";
 import { ExamConfig, GeneratedQuestion, QuestionType, FileData } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Note: Initialization moved inside the function to prevent startup crashes if process.env is undefined in browser
 
 const mcqSchema: Schema = {
   type: Type.ARRAY,
@@ -64,6 +64,8 @@ export const generateQuestions = async (
   textContext: string,
   fileData: FileData | null
 ): Promise<GeneratedQuestion[]> => {
+  // Initialize AI client here to avoid global process.env access crashes
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const model = "gemini-2.5-flash";
 
   const isMcq = config.questionType === QuestionType.MCQ;
